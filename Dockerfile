@@ -81,7 +81,6 @@ RUN pecl install imagick && docker-php-ext-enable imagick
 # Install Composer
 RUN mkdir /var/www/.composer && chown www-data:www-data /var/www/.composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN apt-get install -y git cron
 
 # Install prestissimo
 USER www-data
