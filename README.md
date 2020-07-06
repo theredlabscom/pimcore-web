@@ -62,3 +62,4 @@ Because of filesystem performance it is important that you add the `:delegated` 
 * JRE
 * libreoffice
 * g++
+* xlsx2csv (Python command line utility to convert xlsx to csv)

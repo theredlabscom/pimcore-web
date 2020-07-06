@@ -1,5 +1,5 @@
 FROM php:7.3-apache
-LABEL version="1.0"
+LABEL version="1.1"
 LABEL description="This container allows developers to install pimcore 5.x easily."
 LABEL maintainer="erojas@coreshopsolutions.com"
 
@@ -42,7 +42,8 @@ RUN apt-get install -y apt-utils \
         imagemagick inkscape pngnq pngcrush xvfb cabextract \
         poppler-utils xz-utils libreoffice libreoffice-math jpegoptim ffmpeg \
         html2text ghostscript exiftool wkhtmltopdf \
-        libmagickwand-dev graphviz
+        libmagickwand-dev graphviz \
+        python-setuptools
 
 # # Configure, install and enable php exntesions
 # RUN docker-php-ext-install -j$(nproc) iconv
@@ -82,6 +83,9 @@ RUN pecl install imagick && docker-php-ext-enable imagick
 RUN mkdir /var/www/.composer && chown www-data:www-data /var/www/.composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Install xlsx2csv
+RUN python /usr/lib/python2.7/dist-packages/easy_install.py xlsx2csv
+
 # Install prestissimo
 USER www-data
 RUN composer global require hirak/prestissimo
@@ -91,7 +95,7 @@ USER root
 RUN mkdir -p /var/spool/cron/crontabs && chown root:crontab /var/spool/cron/crontabs
 COPY cronjobs /var/spool/cron/crontabs/www-data
 RUN chown www-data:crontab /var/spool/cron/crontabs/www-data
-RUN chmod 0600 /var/spool/cron/crontabs/www-data
+RUN chmod 0644 /var/spool/cron/crontabs/www-data
 
 # Free disk space
 RUN rm -rf /var/lib/apt/lists/*
